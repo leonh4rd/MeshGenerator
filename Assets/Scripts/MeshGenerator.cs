@@ -17,20 +17,21 @@ public class MeshGenerator : MonoBehaviour
     {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-        StartCoroutine(CreateMesh());
+        CreateMesh();
     }
     void Update() {
         UpdateMesh();
     }
 
-    IEnumerator CreateMesh()
+    void CreateMesh()
     {
         vertices = new Vector3[(xSize + 1)*(zSize + 1)];
         for(int i = 0, z = 0; z <= zSize; z++)
         {
             for(int x = 0; x <= xSize; x++)
             {
-                vertices[i] = new Vector3(x, 0, z);
+                float y = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f;
+                vertices[i] = new Vector3(x, y, z);
                 i++;
             } 
         } 
@@ -50,7 +51,6 @@ public class MeshGenerator : MonoBehaviour
                 triangles[tris + 5] = vert + xSize + 2;
                 vert++;
                 tris += 6;
-                yield return new WaitForSeconds(.1f);
             }   
             vert++;
         }
